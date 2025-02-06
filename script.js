@@ -546,11 +546,13 @@ document.getElementById("profileIcon").addEventListener("click", function(){
   setActivePage("profilePage");
 });
 
-// Column Toggle for Event Stream
+// Column Toggle for Event Stream with Mobile Detection
 let columnCount = 1;
 document.getElementById("columnToggle").addEventListener("click", function() {
+  // Detect mobile based on window width; limit max columns on mobile
+  const maxColumns = window.innerWidth < 600 ? 2 : 4;
   columnCount++;
-  if (columnCount > 4) {
+  if (columnCount > maxColumns) {
     columnCount = 1;
   }
   document.getElementById("eventList").style.gridTemplateColumns = `repeat(${columnCount}, 1fr)`;
