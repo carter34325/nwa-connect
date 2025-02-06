@@ -263,7 +263,7 @@ function applyFilters() {
   const showTicketed = document.querySelector('input[name="showTicketed"]').checked;
   const showNonTicketed = document.querySelector('input[name="showNonTicketed"]').checked;
   
-  // New: Filter by Category
+  // Filter by Category
   const categoryCheckboxes = document.querySelectorAll('input[name="categories"]:checked');
   const selectedCategories = Array.from(categoryCheckboxes).map(cb => cb.value);
   
@@ -549,7 +549,7 @@ document.getElementById("profileIcon").addEventListener("click", function(){
 // Column Toggle for Event Stream with Mobile Detection
 let columnCount = 1;
 document.getElementById("columnToggle").addEventListener("click", function() {
-  // Detect mobile based on window width; limit max columns on mobile
+  // Detect mobile (small screen) and set max columns accordingly.
   const maxColumns = window.innerWidth < 600 ? 2 : 4;
   columnCount++;
   if (columnCount > maxColumns) {
