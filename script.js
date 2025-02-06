@@ -549,7 +549,7 @@ document.getElementById("profileIcon").addEventListener("click", function(){
 // Column Toggle for Event Stream with Mobile Detection
 let columnCount = 1;
 document.getElementById("columnToggle").addEventListener("click", function() {
-  // Detect mobile (small screen) and set max columns accordingly.
+  // Detect small screen; limit max columns to 2 on mobile, 4 on desktop
   const maxColumns = window.innerWidth < 600 ? 2 : 4;
   columnCount++;
   if (columnCount > maxColumns) {

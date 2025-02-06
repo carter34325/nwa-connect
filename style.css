@@ -661,6 +661,14 @@ body {
 
 /* Media Queries for Mobile */
 @media (max-width: 600px) {
+  /* Adjust filter menu to open from the top-middle and be wider */
+  .filter-menu {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: 90%;
+    top: 60px;
+  }
   .filter-menu label {
     font-size: 18px;
   }
@@ -683,3 +691,4 @@ body {
     font-size: 18px;
   }
 }
+
