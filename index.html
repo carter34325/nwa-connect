@@ -2,719 +2,328 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- Mobile-optimized viewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>NWA Connect</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <style>
-    /* CSS Variables for consistency */
-    :root {
-      --bg-color: #1A1A1A;
-      --card-bg: #252525;
-      --accent-color: #9D2235;
-      --inactive-color: #666;
-      --border-color: #333;
-      --text-light: #FFF;
-      --text-muted: #888;
-      --nav-height: 60px;
-    }
-
-    /* Reset default margins and paddings */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      padding-bottom: var(--nav-height); /* ensure content doesn't get hidden behind bottom nav */
-    }
-
-    /* Header */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 16px;
-      border-bottom: 1px solid var(--border-color);
-      background-color: var(--bg-color);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .header-title {
-      color: var(--accent-color);
-      font-size: 20px; /* slightly smaller for mobile */
-      font-weight: bold;
-      letter-spacing: -0.5px;
-    }
-    .header-actions {
-      display: flex;
-      gap: 16px;
-    }
-
-    /* Filter Menu Styles */
-    .filter-menu {
-      position: fixed;
-      top: 60px;
-      right: 16px;
-      background-color: var(--card-bg);
-      padding: 16px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      display: none;
-      z-index: 200;
-      width: 220px;
-    }
-    .filter-menu form {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .filter-menu label {
-      color: var(--text-light);
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .filter-menu fieldset {
-      border: none;
-      padding: 0;
-      margin: 0;
-    }
-    .filter-menu legend {
-      color: var(--text-light);
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-    .filter-menu button {
-      padding: 8px;
-      background-color: var(--accent-color);
-      border: none;
-      color: var(--text-light);
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .filter-menu button:hover {
-      background-color: var(--border-color);
-    }
-
-    /* Vertical, mobile stream layout */
-    .event-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      padding: 16px;
-    }
-    .event-card {
-      background-color: var(--card-bg);
-      border-radius: 16px;
-      padding: 16px;
-      position: relative;
-      transition: transform 0.2s ease;
-      width: 100%;
-      /* Full width; container's padding gives spacing */
-    }
-    .event-card:hover {
-      transform: translateY(-2px);
-    }
-    .verified-badge {
-      display: flex;
-      align-items: center;
-      background-color: var(--accent-color);
-      padding: 4px 8px;
-      border-radius: 20px;
-      position: absolute;
-      top: -10px;
-      right: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      font-size: 10px;
-    }
-    .verified-text {
-      color: var(--text-light);
-      font-size: 10px;
-      margin-left: 4px;
-      font-weight: 500;
-    }
-    .event-content {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-    .category-icon {
-      background-color: var(--border-color);
-      padding: 8px;
-      border-radius: 12px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    }
-    .event-details {
-      flex: 1;
-    }
-    .event-title {
-      color: var(--text-light);
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-    .event-location {
-      color: var(--accent-color);
-      font-size: 14px;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .event-date {
-      color: var(--text-muted);
-      font-size: 12px;
-      margin-bottom: 8px;
-    }
-    .attendee-row {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      color: var(--accent-color);
-      font-size: 12px;
-    }
-    .rsvp-button {
-      background-color: var(--accent-color);
-      padding: 10px;
-      border-radius: 8px;
-      text-align: center;
-      margin-top: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-      font-size: 14px;
-    }
-    .rsvp-button.active {
-      background-color: var(--border-color);
-    }
-    .rsvp-text {
-      color: var(--text-light);
-      font-weight: 600;
-      transition: opacity 0.2s ease;
-    }
-    .rsvp-active {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      opacity: 0;
-    }
-    .rsvp-button.active .rsvp-default {
-      opacity: 0;
-    }
-    .rsvp-button.active .rsvp-active {
-      opacity: 1;
-    }
-    .event-card.unverified .category-icon,
-    .event-card.unverified .event-location i,
-    .event-card.unverified .attendee-row i {
-      color: var(--inactive-color) !important;
-    }
-
-    /* Fixed Bottom Navigation Bar */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: var(--nav-height);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      background-color: var(--card-bg);
-      border-top: 1px solid var(--border-color);
-      align-items: center;
-      padding: 4px 0;
-    }
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
-    .material-icons {
-      font-size: 24px;
-    }
-    .active-icon {
-      color: var(--accent-color);
-      cursor: pointer;
-    }
-    .inactive-icon {
-      color: var(--inactive-color);
-    }
-    .nav-label {
-      font-size: 10px;
-      font-weight: 500;
-      text-transform: uppercase;
-      color: var(--accent-color);
-    }
-
-    /* Helper classes */
-    .small-icon {
-      font-size: 16px;
-    }
-    .verified-icon {
-      color: var(--text-light);
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <div class="header-title">NWA Connect</div>
-      <div class="header-actions">
-        <!-- Filter Icon: Taps toggle the filter menu -->
-        <i class="material-icons active-icon" id="filterIcon">filter_list</i>
+    <!-- Home Page (Event Stream) -->
+    <div id="homePage" class="page">
+      <div class="header">
+        <div class="header-title">NWA Connect</div>
+        <div class="header-actions">
+          <!-- Filter Icon -->
+          <i class="material-icons active-icon" id="filterIcon">filter_list</i>
+          <!-- Column Toggle Button -->
+          <button id="columnToggle">Columns: 1</button>
+        </div>
+      </div>
+      <!-- Filter Menu -->
+      <div id="filterMenu" class="filter-menu">
+        <form id="filterForm">
+          <label>
+            <input type="checkbox" name="showVerified" checked />
+            Show Verified Events
+          </label>
+          <label>
+            <input type="checkbox" name="showUnverified" checked />
+            Show Unverified Events
+          </label>
+          <fieldset class="two-column">
+            <legend>Filter by Location:</legend>
+            <label>
+              <input type="checkbox" name="locations" value="Fayetteville" checked />
+              Fayetteville
+            </label>
+            <label>
+              <input type="checkbox" name="locations" value="Bentonville" checked />
+              Bentonville
+            </label>
+            <label>
+              <input type="checkbox" name="locations" value="Rogers" checked />
+              Rogers
+            </label>
+            <label>
+              <input type="checkbox" name="locations" value="Springdale" checked />
+              Springdale
+            </label>
+            <label>
+              <input type="checkbox" name="locations" value="Siloam Springs" checked />
+              Siloam Springs
+            </label>
+            <label>
+              <input type="checkbox" name="locations" value="Bella Vista" checked />
+              Bella Vista
+            </label>
+          </fieldset>
+          <fieldset>
+            <legend>Filter by Ticket Status:</legend>
+            <label>
+              <input type="checkbox" name="showTicketed" checked />
+              Show Ticketed Events
+            </label>
+            <label>
+              <input type="checkbox" name="showNonTicketed" checked />
+              Show Non-Ticketed Events
+            </label>
+          </fieldset>
+          <fieldset class="two-column">
+            <legend>Filter by Category:</legend>
+            <label>
+              <input type="checkbox" name="categories" value="sports_football" />
+              Sports
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="music_note" />
+              Music
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="palette" />
+              Art
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="book" />
+              Books
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="restaurant" />
+              Food
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="movie" />
+              Movies
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="celebration" />
+              Party
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="computer" />
+              Tech
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="theaters" />
+              Theater
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="mic" />
+              Mic/Poetry
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="emoji_events" />
+              Events
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="directions_bike" />
+              Cycling
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="directions_car" />
+              Cars
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="music_video" />
+              Music Video
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="self_improvement" />
+              Wellness
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="storefront" />
+              Market
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="local_bar" />
+              Bars
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="history_edu" />
+              History
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="emoji_people" />
+              Community
+            </label>
+            <label>
+              <input type="checkbox" name="categories" value="local_offer" />
+              Ticketed
+            </label>
+          </fieldset>
+          <button type="submit">Apply Filters</button>
+          <button type="button" id="closeFilter">Close</button>
+        </form>
+      </div>
+      <!-- Event List -->
+      <div class="event-list" id="eventList"></div>
+    </div>
+
+    <!-- Live Map Page -->
+    <div id="liveMapPage" class="page" style="display:none;">
+      <div class="header">
+        <div class="header-title">Live Map</div>
+      </div>
+      <div class="map-container">
+        <!-- Map Markers -->
+        <div class="map-marker" data-title="Concert at Fayetteville Arena" style="top: 20%; left: 30%;">
+          <i class="material-icons">location_on</i>
+          <div class="marker-popup">
+            <span>Concert at Fayetteville Arena</span>
+            <button class="close-popup">X</button>
+          </div>
+        </div>
+        <div class="map-marker" data-title="Tech Expo in Bentonville" style="top: 40%; left: 50%;">
+          <i class="material-icons">location_on</i>
+          <div class="marker-popup">
+            <span>Tech Expo in Bentonville</span>
+            <button class="close-popup">X</button>
+          </div>
+        </div>
+        <div class="map-marker" data-title="Art Exhibit in Rogers" style="top: 60%; left: 70%;">
+          <i class="material-icons">location_on</i>
+          <div class="marker-popup">
+            <span>Art Exhibit in Rogers</span>
+            <button class="close-popup">X</button>
+          </div>
+        </div>
+        <div class="map-marker" data-title="VIP Concert in Springdale" style="top: 30%; left: 80%;">
+          <i class="material-icons">location_on</i>
+          <div class="marker-popup">
+            <span>VIP Concert in Springdale</span>
+            <button class="close-popup">X</button>
+          </div>
+        </div>
+        <div class="map-marker" data-title="Food Market in Bella Vista" style="top: 70%; left: 20%;">
+          <i class="material-icons">location_on</i>
+          <div class="marker-popup">
+            <span>Food Market in Bella Vista</span>
+            <button class="close-popup">X</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Filter Menu (hidden by default) -->
-    <div id="filterMenu" class="filter-menu">
-      <form id="filterForm">
-        <label>
-          <input type="checkbox" name="showVerified" checked />
-          Show Verified Events
-        </label>
-        <label>
-          <input type="checkbox" name="showUnverified" checked />
-          Show Unverified Events
-        </label>
-        <fieldset>
-          <legend>Filter by Location:</legend>
-          <label>
-            <input type="checkbox" name="locations" value="Fayetteville" checked />
-            Fayetteville
-          </label>
-          <label>
-            <input type="checkbox" name="locations" value="Bentonville" checked />
-            Bentonville
-          </label>
-          <label>
-            <input type="checkbox" name="locations" value="Rogers" checked />
-            Rogers
-          </label>
-          <label>
-            <input type="checkbox" name="locations" value="Springdale" checked />
-            Springdale
-          </label>
-          <label>
-            <input type="checkbox" name="locations" value="Siloam Springs" checked />
-            Siloam Springs
-          </label>
-          <label>
-            <input type="checkbox" name="locations" value="Bella Vista" checked />
-            Bella Vista
-          </label>
-        </fieldset>
-        <button type="submit">Apply Filters</button>
-        <button type="button" id="closeFilter">Close</button>
-      </form>
+    <!-- Ticket Page (Cart) -->
+    <div id="ticketPage" class="page" style="display:none;">
+      <div class="header">
+        <div class="header-title">Tickets</div>
+      </div>
+      <div class="ticket-page-content" style="padding: 16px; color: var(--text-light);">
+        <h2>Your Cart</h2>
+        <div id="cartList"></div>
+        <div class="cart-total">
+          Total: $<span id="totalPrice">0.00</span>
+        </div>
+        <button id="checkoutButton">Checkout</button>
+      </div>
     </div>
 
-    <!-- Event List (Vertical, scrollable stream) -->
-    <div class="event-list" id="eventList"></div>
+    <!-- Profile Page -->
+    <div id="profilePage" class="page" style="display:none;">
+      <div class="header">
+        <div class="header-title">Profile</div>
+      </div>
+      <div class="profile-content" style="padding: 16px; color: var(--text-light);">
+        <div class="profile-banner">
+          <div class="guest-icon" id="guestIcon"></div>
+          <div class="guest-username" id="guestUsername"></div>
+        </div>
+        <!-- Profile Actions (Sign In / Sign Out) -->
+        <div id="profileActions"></div>
+        <p id="welcomeMessage">Welcome, guest! Enjoy your time using NWA Connect.</p>
+        <!-- Post Event Form -->
+        <div class="post-event">
+          <h3>Post a New Event</h3>
+          <form id="postEventForm">
+            <input type="text" id="eventTitle" placeholder="Event Title" required />
+            <div class="location-container">
+              <input type="text" id="eventAddress" placeholder="Enter address" required />
+              <select id="eventCity" required>
+                <option value="">Select City</option>
+                <option value="Fayetteville">Fayetteville</option>
+                <option value="Bentonville">Bentonville</option>
+                <option value="Rogers">Rogers</option>
+                <option value="Springdale">Springdale</option>
+                <option value="Siloam Springs">Siloam Springs</option>
+                <option value="Bella Vista">Bella Vista</option>
+              </select>
+            </div>
+            <!-- Date and Time Dropdowns -->
+            <select id="eventDate" required>
+              <option value="">Select Date</option>
+            </select>
+            <select id="eventTime" required>
+              <option value="">Select Time</option>
+            </select>
+            <!-- Ticketed Event Option (Admin Only) -->
+            <div id="ticketedOption" style="display:none; margin-top: 8px;">
+              <label>
+                Ticketed Event?
+                <input type="checkbox" id="ticketedCheckbox" />
+              </label>
+              <div id="ticketPriceContainer" style="display:none; margin-top: 8px;">
+                <input type="text" id="ticketPrice" placeholder="Enter Ticket Price (numbers only)" />
+              </div>
+            </div>
+            <button type="submit">Post Event</button>
+          </form>
+        </div>
+        <!-- User-Posted Events Stream -->
+        <div id="userEventStream">
+          <h3>Your Posted Events</h3>
+          <div id="userEventsList"></div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Sign In Page -->
+    <div id="signInPage" class="page" style="display:none;">
+      <div class="header">
+        <div class="header-title">Sign In</div>
+      </div>
+      <div class="sign-in-container">
+        <form id="signInForm">
+          <input type="text" id="username" placeholder="Username" required />
+          <input type="password" id="password" placeholder="Password" required />
+          <button type="submit" class="sign-in-btn">Sign In</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Dedicated Event Detail Page -->
+    <div id="eventDetailPage" class="page" style="display:none;">
+      <div class="header">
+        <button id="backToHome" class="back-btn"><i class="material-icons">arrow_back</i></button>
+        <div class="header-title">Event Details</div>
+      </div>
+      <div class="event-detail-content" style="padding: 16px; color: var(--text-light);">
+        <!-- Unique event detail will load here -->
+      </div>
+    </div>
+
+    <!-- Fixed Bottom Navigation -->
     <div class="bottom-nav">
       <div class="nav-item">
-        <i class="material-icons active-icon">home</i>
+        <i class="material-icons active-icon" id="homeIcon">home</i>
         <span class="nav-label">Home</span>
       </div>
       <div class="nav-item">
-        <i class="material-icons inactive-icon">map</i>
-        <span class="nav-label">Map</span>
+        <i class="material-icons inactive-icon" id="mapIcon">map</i>
+        <span class="nav-label">Live Map</span>
       </div>
       <div class="nav-item">
-        <i class="material-icons inactive-icon">confirmation_number</i>
+        <i class="material-icons inactive-icon" id="ticketIcon">confirmation_number</i>
         <span class="nav-label">Tickets</span>
       </div>
       <div class="nav-item">
-        <i class="material-icons inactive-icon">person</i>
+        <i class="material-icons inactive-icon" id="profileIcon">person</i>
         <span class="nav-label">Profile</span>
       </div>
     </div>
   </div>
-
-  <script>
-    // Array of 20 diverse, believable events
-    const events = [
-      {
-        id: 1,
-        verified: true,
-        verifiedText: "Police Verified",
-        categoryIcon: "sports_football",
-        eventTitle: "Razorback Football Tailgate",
-        eventLocation: "Fayetteville Town Center",
-        city: "Fayetteville",
-        eventDate: "Sat, Sep 16 • 6:00 PM",
-        attendeeCount: 1267,
-        rsvpDefault: "Join Group",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 2,
-        verified: true,
-        verifiedText: "University Approved",
-        categoryIcon: "groups",
-        eventTitle: "UA Student Mixer",
-        eventLocation: "Greek Theatre",
-        city: "Fayetteville",
-        eventDate: "Fri, Sep 15 • 8:00 PM",
-        attendeeCount: 501,
-        rsvpDefault: "RSVP Now",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 3,
-        verified: false,
-        categoryIcon: "local_bar",
-        eventTitle: "Downtown Bar Crawl",
-        eventLocation: "Dickson Street Bars",
-        city: "Fayetteville",
-        eventDate: "Fri, Sep 15 • 9:00 PM",
-        attendeeCount: 239,
-        rsvpDefault: "Join Group",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 4,
-        verified: true,
-        verifiedText: "Priority Event",
-        categoryIcon: "music_note",
-        eventTitle: "Concert at the Walmart AMP",
-        eventLocation: "Rogers",
-        city: "Rogers",
-        eventDate: "Sat, Sep 23 • 7:30 PM",
-        attendeeCount: 2437,
-        rsvpDefault: "Buy Tickets ($25+)",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 5,
-        verified: false,
-        categoryIcon: "celebration",
-        eventTitle: "Private House Party",
-        eventLocation: "Off-Campus Location",
-        city: "Bentonville",
-        eventDate: "Sat, Sep 16 • 10:00 PM",
-        attendeeCount: 57,
-        rsvpDefault: "Request Access",
-        rsvpActive: "Pending ✓"
-      },
-      {
-        id: 6,
-        verified: false,
-        categoryIcon: "school",
-        eventTitle: "Campus Study Session",
-        eventLocation: "Mullins Library",
-        city: "Fayetteville",
-        eventDate: "Mon, Sep 18 • 7:00 PM",
-        attendeeCount: 73,
-        rsvpDefault: "Join Group",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 7,
-        verified: true,
-        verifiedText: "City Verified",
-        categoryIcon: "palette",
-        eventTitle: "Springdale Art Walk",
-        eventLocation: "Downtown Springdale",
-        city: "Springdale",
-        eventDate: "Sun, Oct 8 • 4:00 PM",
-        attendeeCount: 853,
-        rsvpDefault: "RSVP Now",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 8,
-        verified: false,
-        categoryIcon: "storefront",
-        eventTitle: "Bentonville Farmers Market",
-        eventLocation: "Central Bentonville",
-        city: "Bentonville",
-        eventDate: "Sat, Oct 14 • 9:00 AM",
-        attendeeCount: 471,
-        rsvpDefault: "Join Group",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 9,
-        verified: true,
-        verifiedText: "Community Verified",
-        categoryIcon: "movie",
-        eventTitle: "Rogers Outdoor Movie Night",
-        eventLocation: "City Park, Rogers",
-        city: "Rogers",
-        eventDate: "Fri, Oct 20 • 8:30 PM",
-        attendeeCount: 1085,
-        rsvpDefault: "RSVP Now",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 10,
-        verified: false,
-        categoryIcon: "self_improvement",
-        eventTitle: "Siloam Springs Yoga in the Park",
-        eventLocation: "Oak Grove Park",
-        city: "Siloam Springs",
-        eventDate: "Sat, Oct 21 • 7:00 AM",
-        attendeeCount: 93,
-        rsvpDefault: "Join Group",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 11,
-        verified: true,
-        verifiedText: "City Verified",
-        categoryIcon: "local_bar",
-        eventTitle: "Bella Vista Craft Beer Fest",
-        eventLocation: "Bella Vista Downtown",
-        city: "Bella Vista",
-        eventDate: "Sun, Oct 29 • 3:00 PM",
-        attendeeCount: 653,
-        rsvpDefault: "Buy Tickets ($10+)",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 12,
-        verified: false,
-        categoryIcon: "theaters",
-        eventTitle: "Fayetteville Community Theater",
-        eventLocation: "Main Street Theater",
-        city: "Fayetteville",
-        eventDate: "Fri, Nov 3 • 7:30 PM",
-        attendeeCount: 387,
-        rsvpDefault: "RSVP Now",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 13,
-        verified: true,
-        verifiedText: "University Verified",
-        categoryIcon: "emoji_events",
-        eventTitle: "Springdale Startup Pitch",
-        eventLocation: "Springdale Innovation Hub",
-        city: "Springdale",
-        eventDate: "Wed, Nov 8 • 6:00 PM",
-        attendeeCount: 511,
-        rsvpDefault: "RSVP Now",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 14,
-        verified: false,
-        categoryIcon: "directions_bike",
-        eventTitle: "Bentonville Night Market Bike Tour",
-        eventLocation: "Downtown Bentonville",
-        city: "Bentonville",
-        eventDate: "Sat, Nov 11 • 5:00 PM",
-        attendeeCount: 289,
-        rsvpDefault: "Join Group",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 15,
-        verified: true,
-        verifiedText: "City Verified",
-        categoryIcon: "emoji_people",
-        eventTitle: "Rogers Startup Networking",
-        eventLocation: "Rogers Tech Hub",
-        city: "Rogers",
-        eventDate: "Mon, Nov 14 • 6:30 PM",
-        attendeeCount: 729,
-        rsvpDefault: "RSVP Now",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 16,
-        verified: true,
-        verifiedText: "City Verified",
-        categoryIcon: "restaurant_menu",
-        eventTitle: "Springdale Food Fest",
-        eventLocation: "Main Square, Springdale",
-        city: "Springdale",
-        eventDate: "Sat, Nov 18 • 12:00 PM",
-        attendeeCount: 920,
-        rsvpDefault: "RSVP Now",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 17,
-        verified: true,
-        verifiedText: "Tech Verified",
-        categoryIcon: "computer",
-        eventTitle: "Bentonville Tech Expo",
-        eventLocation: "Expo Center, Bentonville",
-        city: "Bentonville",
-        eventDate: "Sun, Nov 19 • 10:00 AM",
-        attendeeCount: 1100,
-        rsvpDefault: "Buy Tickets",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 18,
-        verified: false,
-        categoryIcon: "mic",
-        eventTitle: "Rogers Poetry Slam",
-        eventLocation: "Open Mic, Rogers",
-        city: "Rogers",
-        eventDate: "Fri, Nov 25 • 7:00 PM",
-        attendeeCount: 310,
-        rsvpDefault: "Join Group",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 19,
-        verified: true,
-        verifiedText: "Community Verified",
-        categoryIcon: "book",
-        eventTitle: "Fayetteville Book Club Meeting",
-        eventLocation: "Local Library, Fayetteville",
-        city: "Fayetteville",
-        eventDate: "Wed, Nov 29 • 5:00 PM",
-        attendeeCount: 150,
-        rsvpDefault: "RSVP Now",
-        rsvpActive: "Going! ✓"
-      },
-      {
-        id: 20,
-        verified: false,
-        categoryIcon: "directions_car",
-        eventTitle: "Bella Vista Car Show",
-        eventLocation: "Bella Vista Fairgrounds",
-        city: "Bella Vista",
-        eventDate: "Sun, Dec 3 • 9:00 AM",
-        attendeeCount: 480,
-        rsvpDefault: "Join Group",
-        rsvpActive: "Going! ✓"
-      }
-    ];
-
-    /**
-     * Renders events from the provided array.
-     * Events are sorted in descending order by attendeeCount before rendering.
-     */
-    function renderEvents(eventsToRender = events) {
-      // Create a sorted copy by attendeeCount (highest first)
-      const sortedEvents = [...eventsToRender].sort((a, b) => b.attendeeCount - a.attendeeCount);
-      const container = document.getElementById("eventList");
-      container.innerHTML = ""; // Clear existing content
-
-      sortedEvents.forEach(event => {
-        const verifiedBadge = event.verified
-          ? `<div class="verified-badge">
-               <i class="material-icons small-icon verified-icon">verified</i>
-               <span class="verified-text">${event.verifiedText}</span>
-             </div>`
-          : "";
-        const cardClass = event.verified ? "event-card" : "event-card unverified";
-
-        const eventHTML = `
-          <div class="${cardClass}">
-            ${verifiedBadge}
-            <div class="event-content">
-              <div class="category-icon">
-                <i class="material-icons ${event.verified ? "active-icon" : "inactive-icon"}">
-                  ${event.categoryIcon}
-                </i>
-              </div>
-              <div class="event-details">
-                <div class="event-title">${event.eventTitle}</div>
-                <div class="event-location">
-                  <i class="material-icons small-icon ${event.verified ? "" : "inactive-icon"}">place</i>
-                  ${event.eventLocation}
-                </div>
-                <div class="event-date">${event.eventDate}</div>
-                <div class="attendee-row">
-                  <i class="material-icons small-icon ${event.verified ? "" : "inactive-icon"}">people</i>
-                  <span>${event.attendeeCount} Going</span>
-                </div>
-              </div>
-            </div>
-            <div class="rsvp-button">
-              <span class="rsvp-text rsvp-default">${event.rsvpDefault}</span>
-              <span class="rsvp-text rsvp-active">${event.rsvpActive}</span>
-            </div>
-          </div>
-        `;
-        container.insertAdjacentHTML("beforeend", eventHTML);
-      });
-    }
-
-    // Initial render of all events
-    renderEvents();
-
-    // RSVP Toggle Functionality using event delegation
-    document.addEventListener("click", function (e) {
-      const rsvpButton = e.target.closest(".rsvp-button");
-      if (rsvpButton) {
-        rsvpButton.classList.toggle("active");
-        const card = rsvpButton.closest(".event-card");
-        const attendeeSpan = card.querySelector(".attendee-row span");
-        let currentCount = parseInt(attendeeSpan.textContent.replace(/[^0-9]/g, "")) || 0;
-        const isActive = rsvpButton.classList.contains("active");
-        const newCount = isActive ? currentCount + 1 : currentCount - 1;
-        const suffix = attendeeSpan.textContent.replace(/[\d,]/g, "").trim();
-        attendeeSpan.textContent = `${newCount} ${suffix}`;
-      }
-    });
-
-    // Filter functionality: filter by verified status and by city (using checkboxes)
-    function applyFilters() {
-      const showVerified = document.querySelector('input[name="showVerified"]').checked;
-      const showUnverified = document.querySelector('input[name="showUnverified"]').checked;
-      // Get selected city values from checkboxes
-      const locationCheckboxes = document.querySelectorAll('input[name="locations"]:checked');
-      const selectedCities = Array.from(locationCheckboxes).map(cb => cb.value);
-
-      const filtered = events.filter(event => {
-        if (event.verified && !showVerified) return false;
-        if (!event.verified && !showUnverified) return false;
-        if (selectedCities.length && !selectedCities.includes(event.city)) return false;
-        return true;
-      });
-      return filtered;
-    }
-
-    // Toggle filter menu when filter icon is tapped
-    document.getElementById("filterIcon").addEventListener("click", function () {
-      const filterMenu = document.getElementById("filterMenu");
-      filterMenu.style.display = filterMenu.style.display === "block" ? "none" : "block";
-    });
-
-    // Handle filter form submission
-    document.getElementById("filterForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const filteredEvents = applyFilters();
-      renderEvents(filteredEvents);
-      document.getElementById("filterMenu").style.display = "none";
-    });
-
-    // Close button for filter menu
-    document.getElementById("closeFilter").addEventListener("click", function () {
-      document.getElementById("filterMenu").style.display = "none";
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
-
-

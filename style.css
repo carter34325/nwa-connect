@@ -1,0 +1,685 @@
+/* CSS Variables */
+:root {
+  --bg-color: #1A1A1A;
+  --card-bg: #252525;
+  --accent-color: #9D2235;
+  --inactive-color: #666;
+  --border-color: #333;
+  --text-light: #FFF;
+  --text-muted: #888;
+  --nav-height: 60px;
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-bottom: var(--nav-height);
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-title {
+  color: var(--accent-color);
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: -0.5px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.header-actions button {
+  background-color: var(--accent-color);
+  border: none;
+  color: var(--text-light);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.header-actions button:hover {
+  background-color: var(--border-color);
+}
+
+/* Filter Menu */
+.filter-menu {
+  position: fixed;
+  top: 60px;
+  right: 16px;
+  background-color: var(--card-bg);
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  display: none;
+  z-index: 200;
+  width: 220px;
+}
+
+.filter-menu form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Ensure label text wraps and does not overflow */
+.filter-menu label {
+  color: var(--text-light);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* Increase the size of checkboxes for mobile/touch */
+.filter-menu input[type="checkbox"] {
+  transform: scale(1.5);
+  cursor: pointer;
+}
+
+/* Two-Column Grid for fieldsets with many options */
+.filter-menu fieldset.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* Fieldset and legend adjustments */
+.filter-menu fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filter-menu legend {
+  color: var(--text-light);
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.filter-menu button {
+  padding: 10px;
+  background-color: var(--accent-color);
+  border: none;
+  color: var(--text-light);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.filter-menu button:hover {
+  background-color: var(--border-color);
+}
+
+/* Event List */
+.event-list {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+  padding: 16px;
+}
+
+/* Event Card */
+.event-card {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  padding: 16px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+/* Options Button Container (top-right inside the card) */
+.options-container {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+/* Options Button (3 Dots) */
+.event-options-btn {
+  background-color: transparent;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+.event-options-btn:hover {
+  color: var(--accent-color);
+}
+
+/* Verified Badge - positioned at the top left */
+.verified-badge {
+  display: flex;
+  align-items: center;
+  background-color: var(--accent-color);
+  padding: 4px 8px;
+  border-radius: 20px;
+  position: absolute;
+  top: -10px;
+  left: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-size: 10px;
+}
+
+.verified-icon {
+  color: var(--text-light);
+}
+
+/* Event Content */
+.event-content {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.category-icon {
+  background-color: var(--border-color);
+  padding: 8px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.event-details {
+  flex: 1;
+}
+
+.event-title {
+  color: var(--text-light);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.event-location {
+  color: var(--accent-color);
+  font-size: 14px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.event-location span {
+  display: inline-block;
+}
+
+.event-date {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.attendee-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent-color);
+  font-size: 12px;
+}
+
+/* Copy Address Button */
+.copy-address-container {
+  margin-top: 8px;
+}
+.copy-address-btn {
+  background-color: var(--accent-color);
+  border: none;
+  color: var(--text-light);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+.copy-address-btn:hover {
+  background-color: var(--border-color);
+}
+
+/* RSVP / Add Ticket Button */
+.rsvp-button {
+  background-color: var(--accent-color);
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+  font-size: 14px;
+}
+
+.rsvp-button.active {
+  background-color: var(--border-color);
+}
+
+.rsvp-text {
+  color: var(--text-light);
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.rsvp-active {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+.rsvp-button.active .rsvp-default {
+  opacity: 0;
+}
+
+.rsvp-button.active .rsvp-active {
+  opacity: 1;
+}
+
+.event-card.unverified .category-icon,
+.event-card.unverified .event-location i,
+.event-card.unverified .attendee-row i {
+  color: var(--inactive-color) !important;
+}
+
+/* Fixed Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background-color: var(--card-bg);
+  border-top: 1px solid var(--border-color);
+  align-items: center;
+  padding: 4px 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.material-icons {
+  font-size: 24px;
+}
+
+.active-icon {
+  color: var(--accent-color);
+  cursor: pointer;
+}
+
+.inactive-icon {
+  color: var(--inactive-color);
+}
+
+.nav-label {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--accent-color);
+}
+
+/* Helper */
+.small-icon {
+  font-size: 16px;
+}
+
+/* Profile Banner */
+.profile-banner {
+  background-color: #444;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.guest-icon {
+  width: 50px;
+  height: 50px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-light);
+  margin-right: 12px;
+}
+
+.guest-username {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-light);
+}
+
+/* Post Event Form in Profile */
+.post-event {
+  background-color: var(--card-bg);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.post-event h3 {
+  margin-bottom: 8px;
+  color: var(--text-light);
+}
+
+.post-event form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.post-event input,
+.post-event select {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.post-event button {
+  background-color: var(--accent-color);
+  border: none;
+  color: var(--text-light);
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.post-event button:hover {
+  background-color: var(--border-color);
+}
+
+/* Location Container */
+.location-container {
+  display: flex;
+  gap: 8px;
+}
+
+.location-container input,
+.location-container select {
+  flex: 1;
+  font-size: 16px;
+}
+
+/* Ticketed Option Container (Admin Only) */
+#ticketedOption {
+  margin-top: 8px;
+  font-size: 16px;
+  color: var(--text-light);
+}
+#ticketPriceContainer {
+  margin-top: 8px;
+}
+
+/* User Posted Events Stream */
+#userEventStream {
+  background-color: var(--card-bg);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+#userEventStream h3 {
+  color: var(--text-light);
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.user-event-card {
+  background-color: var(--card-bg);
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  color: var(--text-light);
+}
+
+.user-event-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+
+.user-event-location,
+.user-event-date,
+.user-event-attendees {
+  font-size: 14px;
+}
+
+/* Ticket Page (Cart) */
+.ticket-page-content h2 {
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+.cart-item {
+  background-color: var(--card-bg);
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.cart-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.cart-controls button {
+  background-color: var(--accent-color);
+  border: none;
+  color: var(--text-light);
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.cart-controls button:hover {
+  background-color: var(--border-color);
+}
+
+.item-quantity {
+  min-width: 24px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.cart-total {
+  margin: 16px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#checkoutButton {
+  background-color: var(--accent-color);
+  border: none;
+  color: var(--text-light);
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+#checkoutButton:hover {
+  background-color: var(--border-color);
+}
+
+/* Ticket Price Styling */
+.ticket-price {
+  font-size: 14px;
+  color: red;
+  margin-top: 4px;
+}
+
+/* Live Map Page */
+.map-container {
+  background-image: url('images/mymap.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+.map-marker i {
+  font-size: 48px;
+}
+
+/* Marker Popup */
+.marker-popup {
+  display: none;
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: var(--text-light);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.marker-popup .close-popup {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-weight: bold;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+/* Map Marker */
+.map-marker {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  color: red;
+}
+
+/* Sign In Container */
+.sign-in-container {
+  background-color: var(--card-bg);
+  padding: 16px;
+  border-radius: 8px;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.sign-in-container input {
+  font-size: 16px;
+}
+
+/* Sign In Button Styling */
+.sign-in-btn {
+  background-color: var(--accent-color);
+  border: none;
+  color: var(--text-light);
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: background-color 0.2s ease;
+}
+.sign-in-btn:hover {
+  background-color: var(--border-color);
+}
+
+/* Event Detail Page */
+#eventDetailPage {
+  padding: 16px;
+}
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+/* Media Queries for Mobile */
+@media (max-width: 600px) {
+  .filter-menu label {
+    font-size: 18px;
+  }
+  .filter-menu input[type="checkbox"] {
+    transform: scale(2);
+    margin-right: 10px;
+  }
+  .filter-menu button {
+    padding: 14px;
+    font-size: 18px;
+  }
+  .header-title {
+    font-size: 24px;
+  }
+  .post-event input, .post-event select {
+    font-size: 18px;
+  }
+  .post-event button {
+    padding: 12px;
+    font-size: 18px;
+  }
+}
